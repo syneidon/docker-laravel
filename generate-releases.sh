@@ -8,7 +8,7 @@ BASE_DIR="./base"
 DIST_DIR="./dist"
 TEST_DIR="./test"
 
-# Ensure jq and curl exist
+# Check required tools
 for bin in jq curl; do
   if ! command -v $bin &>/dev/null; then
     echo "❌ Error: $bin is not installed."
@@ -26,7 +26,7 @@ declare -A seen_combination
 latest_php=""
 latest_node=""
 
-# Normalize matrix line endings
+# Normalize matrix file
 dos2unix "$MATRIX_FILE" >/dev/null 2>&1
 
 laravel_versions=$(jq -r 'keys[]' "$MATRIX_FILE")
@@ -47,14 +47,14 @@ for laravel_version in $laravel_versions; do
       base_file="$BASE_DIR/php${safe_php}-nonode.Dockerfile"
       base_tag="syneidon/laravel:php${safe_php}-nonode"
 
-      # Generate base Dockerfile without Node.js
+      # Generate base Dockerfile
       sed \
         -e "s|{{LARAVEL_VERSION}}|$laravel_version|g" \
         -e "s|{{PHP_VERSION}}|$php_version_clean|g" \
         -e "/^# NODE START/,/^# NODE END/d" \
         "$TEMPLATE_FILE" > "$base_file"
 
-      # Build only if not already available
+      # Build only if image doesn't already exist
       if docker image inspect "$base_tag" > /dev/null 2>&1; then
         echo "🟡 Base image $base_tag already exists, skipping build."
       else
@@ -87,23 +87,23 @@ for laravel_version in $laravel_versions; do
           "$TEMPLATE_FILE" |
           if [[ "$dir" == "$TEST_DIR" ]]; then
             awk -v version="$laravel_version" '
-            /# Use non-root user/ {
-              print "RUN composer create-project laravel/laravel:^" version ".0 ."
-              print "RUN cp .env.example .env \\"
-              print " && sed -i \"s/^DB_CONNECTION=.*/DB_CONNECTION=mysql/\" .env \\"
-              print " && sed -i \"s/^DB_HOST=.*/DB_HOST=syneidon-laravel-test-db/\" .env \\"
-              print " && sed -i \"s/^DB_PORT=.*/DB_PORT=3306/\" .env \\"
-              print " && sed -i \"s/^DB_DATABASE=.*/DB_DATABASE=laravel/\" .env \\"
-              print " && sed -i \"s/^DB_USERNAME=.*/DB_USERNAME=root/\" .env \\"
-              print " && sed -i \"s/^DB_PASSWORD=.*/DB_PASSWORD=password/\" .env \\"
-              print " && php artisan key:generate"
-              print "RUN chown -R appuser:appuser storage bootstrap/cache"
-            }
-            { print }
-          '
+              /# Use non-root user/ {
+                print "RUN composer create-project laravel/laravel:^" version ".0 ."
+                print "RUN cp .env.example .env \\"
+                print " && sed -i \"s/^DB_CONNECTION=.*/DB_CONNECTION=mysql/\" .env \\"
+                print " && sed -i \"s/^DB_HOST=.*/DB_HOST=syneidon-laravel-test-db/\" .env \\"
+                print " && sed -i \"s/^DB_PORT=.*/DB_PORT=3306/\" .env \\"
+                print " && sed -i \"s/^DB_DATABASE=.*/DB_DATABASE=laravel/\" .env \\"
+                print " && sed -i \"s/^DB_USERNAME=.*/DB_USERNAME=root/\" .env \\"
+                print " && sed -i \"s/^DB_PASSWORD=.*/DB_PASSWORD=password/\" .env \\"
+                print " && php artisan key:generate"
+                print "RUN chown -R appuser:appuser storage bootstrap/cache"
+              }
+              { print }
+            '
           else
             cat
-          fi >"$outfile"
+          fi > "$outfile"
 
         echo "📄 Created $outfile [${dir##*/}]"
       done
@@ -111,11 +111,12 @@ for laravel_version in $laravel_versions; do
   done
 done
 
-# Copy latest to default Dockerfile
+# Set default Dockerfiles
 latest_safe_php=$(echo "$latest_php" | sed 's/\.//g')
 latest_safe_node=$(echo "$latest_node" | sed 's/\.//g')
+
 cp "$DIST_DIR/php${latest_safe_php}-node${latest_safe_node}.Dockerfile" "$DIST_DIR/Dockerfile"
 cp "$TEST_DIR/php${latest_safe_php}-node${latest_safe_node}.Dockerfile" "$TEST_DIR/Dockerfile"
-echo "🔗 Default Dockerfiles set to php${latest_php} + node${latest_node}"
 
+echo "🔗 Default Dockerfiles set to php${latest_php} + node${latest_node}"
 echo "✅ All Dockerfiles and base images generated successfully."
