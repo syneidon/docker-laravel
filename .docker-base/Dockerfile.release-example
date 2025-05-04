@@ -1,0 +1,22 @@
+FROM ordinov/php-apache-laravel:latest
+
+# Switch to root user to install dependencies
+USER root
+
+# install os dependencies required for Node.js
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# install Node.js 18
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Switch back to the original user (appuser) if necessary
+USER appuser
+
+# Set workdir (if needed)
+WORKDIR /var/www/html
+
+CMD ["apache2-foreground"]

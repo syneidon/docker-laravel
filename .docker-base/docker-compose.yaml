@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # Apache with PHP Service
+  appme-laravel_app:
+    image: ordinov/php-apache-laravel:latest
+    container_name: appme-laravel_app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+      - ./docker/certs/:/etc/ssl/certs/
+      - ./docker/apache.conf:/etc/apache2/sites-available/000-default.conf
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - appme-db
+      - appme-redis
+      - appme-memcached
+    networks:
+      - app-network
+
+  # MariaDB Service
+  appme-db:
+    image: mariadb:10.6
+    container_name: ${DB_HOST}
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - '${DB_PORT}:3306'
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - app-network
+
+  # Redis Service
+  appme-redis:
+    image: redis:alpine
+    container_name: ${REDIS_HOST}
+    restart: unless-stopped
+    ports:
+      - '${REDIS_PORT}:6379'
+    networks:
+      - app-network
+
+  # Memcached Service
+  appme-memcached:
+    image: memcached:alpine
+    container_name: ${MEMCACHED_HOST}
+    restart: unless-stopped
+    ports:
+      - "${MEMCACHED_PORT}:11211"
+    networks:
+      - app-network
+
+  # Mailhog Service
+  appme-mailhog:
+    image: mailhog/mailhog:latest
+    container_name: appme-mailhog
+    restart: unless-stopped
+    ports:
+      - '1025:1025' # SMTP port
+      - '8025:8025' # Web interface
+    networks:
+      - app-network
+
+# Volumes
+volumes:
+  dbdata:
+
+# Networks
+networks:
+  app-network:
+    driver: bridge

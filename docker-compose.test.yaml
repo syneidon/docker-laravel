@@ -1,0 +1,33 @@
+services:
+  syneidon-laravel-test-app:
+    image: ordinov/php-apache-laravel:latest
+    container_name: syneidon-laravel-test-app
+    restart: unless-stopped
+    # volumes:
+    #   - ./laravel:/var/www/html
+    ports:
+      - '80:80'
+    depends_on:
+      - syneidon-laravel-test-db
+    networks:
+      - syneidon-laravel-test-network
+
+  # MariaDB Service
+  syneidon-laravel-test-db:
+    image: mariadb:10.6
+    container_name: syneidon-laravel-test-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - syneidon-laravel-test-network
+
+# Networks
+networks:
+  syneidon-laravel-test-network:
+    driver: bridge
