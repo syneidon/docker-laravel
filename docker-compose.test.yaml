@@ -6,7 +6,7 @@ services:
     # volumes:
     #   - ./laravel:/var/www/html
     ports:
-      - '80:80'
+      - '8089:80'
     depends_on:
       - syneidon-laravel-test-db
     networks:
@@ -22,8 +22,6 @@ services:
       MYSQL_DATABASE: laravel
       MYSQL_USER: user
       MYSQL_PASSWORD: password
-    volumes:
-      - dbdata:/var/lib/mysql
     networks:
       - syneidon-laravel-test-network
 

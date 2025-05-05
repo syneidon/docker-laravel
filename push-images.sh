@@ -2,13 +2,25 @@
 
 set -e
 
+FORCE_PUSH=false
+[[ "$1" == "--force" ]] && FORCE_PUSH=true
+
 MATRIX_FILE="./src/versions-matrix.json"
+DIST_DIR="./dist"
+REPO="syneidon/laravel"
 
 # Check for required tools
-if ! command -v jq &>/dev/null; then
-    echo "❌ jq is required but not installed."
+for tool in jq docker; do
+  if ! command -v "$tool" &>/dev/null; then
+    echo "❌ $tool is required but not installed."
     exit 1
-fi
+  fi
+done
+
+check_remote_tag_exists() {
+  local image="$1"
+  docker manifest inspect "$image" >/dev/null 2>&1
+}
 
 echo "🚀 Starting Docker image push process..."
 
@@ -16,17 +28,23 @@ echo "🚀 Starting Docker image push process..."
 echo "📦 Pushing base images..."
 jq -r 'to_entries[] | .value.php[]' "$MATRIX_FILE" | sed 's/\.//g' | sort -u | while read -r safe_php; do
   tag="php${safe_php}-nonode"
-  image="syneidon/laravel:$tag"
-  echo "🔄 Pushing $image..."
-  docker push "$image"
+  image="$REPO:$tag"
+
+  if check_remote_tag_exists "$image" && [ "$FORCE_PUSH" = false ]; then
+    echo "⏭ Skipping $image (already exists)"
+  else
+    echo "🔄 Pushing $image..."
+    docker push "$image"
+  fi
 done
 
 # Push versioned images and tags
 echo ""
 echo "📦 Pushing Laravel + PHP + Node combo images..."
 jq -r 'keys[]' "$MATRIX_FILE" | while read -r laravel_version; do
-  php_versions=$(jq -r --arg v "$laravel_version" '.[$v].php[]' "$MATRIX_FILE")
-  node_versions=$(jq -r --arg v "$laravel_version" '.[$v].node[]' "$MATRIX_FILE")
+  laravel_version=$(echo "$laravel_version" | tr -d '\r')
+  php_versions=$(jq -r --arg v "$laravel_version" '.[$v].php // [] | .[]' "$MATRIX_FILE")
+  node_versions=$(jq -r --arg v "$laravel_version" '.[$v].node // [] | .[]' "$MATRIX_FILE")
 
   latest_php=""
   latest_node=""
@@ -40,27 +58,44 @@ jq -r 'keys[]' "$MATRIX_FILE" | while read -r laravel_version; do
       safe_node=$(echo "$node_version" | sed 's/\.//g')
 
       base_tag="php${safe_php}-node${safe_node}"
-      versioned_tag="v${laravel_version#v}-${base_tag}"  # e.g. v8-php81-node18
+      versioned_tag="v${laravel_version#v}-${base_tag}"
+      dockerfile="$DIST_DIR/${base_tag}.Dockerfile"
 
-      echo "🔄 Pushing syneidon/laravel:$base_tag"
-      docker push "syneidon/laravel:$base_tag"
+      if ! docker image inspect "$REPO:$base_tag" >/dev/null 2>&1; then
+        echo "🧱 Building $REPO:$base_tag from $dockerfile..."
+        docker build -f "$dockerfile" -t "$REPO:$base_tag" .
+      fi
 
-      echo "🔄 Tagging syneidon/laravel:$versioned_tag"
-      docker tag "syneidon/laravel:$base_tag" "syneidon/laravel:$versioned_tag"
-      docker push "syneidon/laravel:$versioned_tag"
+      if check_remote_tag_exists "$REPO:$base_tag" && [ "$FORCE_PUSH" = false ]; then
+        echo "⏭ Skipping push for $REPO:$base_tag (already exists)"
+      else
+        echo "🔄 Pushing $REPO:$base_tag"
+        docker push "$REPO:$base_tag"
+      fi
+
+      if check_remote_tag_exists "$REPO:$versioned_tag" && [ "$FORCE_PUSH" = false ]; then
+        echo "⏭ Skipping tag $REPO:$versioned_tag (already exists)"
+      else
+        echo "🏷 Tagging $REPO:$base_tag as $REPO:$versioned_tag"
+        docker tag "$REPO:$base_tag" "$REPO:$versioned_tag"
+        docker push "$REPO:$versioned_tag"
+      fi
     done
   done
 
-  # Tag latest for this Laravel version
   latest_safe_php=$(echo "$latest_php" | sed 's/\.//g')
   latest_safe_node=$(echo "$latest_node" | sed 's/\.//g')
   latest_tag="v${laravel_version#v}"
   combo_tag="php${latest_safe_php}-node${latest_safe_node}"
 
-  echo "🏷 Tagging syneidon/laravel:$combo_tag as syneidon/laravel:$latest_tag"
-  docker tag "syneidon/laravel:$combo_tag" "syneidon/laravel:$latest_tag"
-  docker push "syneidon/laravel:$latest_tag"
+  if check_remote_tag_exists "$REPO:$latest_tag" && [ "$FORCE_PUSH" = false ]; then
+    echo "⏭ Skipping alias tag $REPO:$latest_tag (already exists)"
+  else
+    echo "🏷 Tagging $REPO:$combo_tag as $REPO:$latest_tag"
+    docker tag "$REPO:$combo_tag" "$REPO:$latest_tag"
+    docker push "$REPO:$latest_tag"
+  fi
 done
 
 echo ""
-echo "✅ All images pushed successfully."
+echo "✅ All images built and pushed (or skipped if already present)."

@@ -1,5 +1,5 @@
-# Laravel {{LARAVEL_VERSION}} - PHP {{PHP_VERSION}} - Node {{NODE_VERSION}}
-FROM php:{{PHP_VERSION}}-apache
+# Laravel v6 - PHP 7.4 - Node {{NODE_VERSION}}
+FROM php:7.4-apache
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

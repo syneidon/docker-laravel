@@ -1,2 +1,4 @@
 .note.txt
 .env
+test/*
+!test/.gitkeep
