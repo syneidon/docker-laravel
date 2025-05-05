@@ -1,6 +1,8 @@
-# docker-laravel
+# Syneidon Laravel Docker Images
 
-example:
+## Examples
+
+### Simple container example
 
 ```bash
   # pull the image from docker hub for the desired Laravel version:
@@ -16,7 +18,7 @@ example:
   # ... and it's done!
 ```
 
-docker-compose example with database and project mount:
+### Compose example with database and mount:
 
 ```yaml
 services:
@@ -24,7 +26,7 @@ services:
     image: syneidon/laravel:v10
     name: laravel-app
     volumes:
-      - ./src:/var/www/html
+      - './src:/var/www/html'
     ports:
       - '80:80'
     depends_on:
@@ -49,4 +51,16 @@ volumes:
 networks:
   laravel-network:
     driver: bridge
-```yaml
+```
+
+## Supported versions
+
+| Laravel Version | PHP Versions           | Node Versions         |
+|------------------|------------------------|------------------------|
+| v6               | 7.3, 7.4, 8.0         | 14, 16, 18, 20         |
+| v7               | 7.3, 7.4, 8.0         | 14, 16, 18, 20         |
+| v8               | 7.3, 7.4, 8.0, 8.1    | 14, 16, 18, 20         |
+| v9               | 8.0, 8.1, 8.2         | 14, 16, 18, 20         |
+| v10              | 8.1, 8.2              | 14, 16, 18, 20         |
+| v11              | 8.1, 8.2, 8.3         | 16, 18, 20             |
+| v12              | 8.2, 8.3              | 18, 20                |
