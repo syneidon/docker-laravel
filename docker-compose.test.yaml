@@ -1,6 +1,6 @@
 services:
   syneidon-laravel-test-app:
-    image: ordinov/php-apache-laravel:latest
+    image: syneidon/laravel:latest
     container_name: syneidon-laravel-test-app
     restart: unless-stopped
     # volumes:

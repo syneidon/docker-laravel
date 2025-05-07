@@ -1,0 +1,394 @@
+[
+  {
+    "title": "syneidon/laravel:php73-nonode-build1.0",
+    "tags": [
+      "php73-nonode",
+      "php73-nonode-build1.0"
+    ],
+    "digest": "sha256:8989999946647d109d53e710970505341cbc27727c63b07123137a3263655a1d"
+  },
+  {
+    "title": "syneidon/laravel:php74-nonode-build1.0",
+    "tags": [
+      "php74-nonode",
+      "php74-nonode-build1.0"
+    ],
+    "digest": "sha256:cb8282a01d391e975f2a462291096fc63b43bf86323e88222d6ec5a88a6c2ac0"
+  },
+  {
+    "title": "syneidon/laravel:php80-nonode-build1.0",
+    "tags": [
+      "php80-nonode",
+      "php80-nonode-build1.0"
+    ],
+    "digest": "sha256:a07fd0f62aae32514b55e243f3869f96337b11f065272fd0abad2820ff92ff5e"
+  },
+  {
+    "title": "syneidon/laravel:php81-nonode-build1.0",
+    "tags": [
+      "php81-nonode",
+      "php81-nonode-build1.0"
+    ],
+    "digest": "sha256:5221f3cadc0c094aa76e3ad8b451a4e89f914054aa9741b2cdedc793bdb07c1e"
+  },
+  {
+    "title": "syneidon/laravel:php82-nonode-build1.0",
+    "tags": [
+      "php82-nonode",
+      "php82-nonode-build1.0"
+    ],
+    "digest": "sha256:86482d95b6dd7792d0786e4c2d071914594f59b0d998771bf0133b27870f8035"
+  },
+  {
+    "title": "syneidon/laravel:php83-nonode-build1.0",
+    "tags": [
+      "php83-nonode",
+      "php83-nonode-build1.0"
+    ],
+    "digest": "sha256:dfbf833a5b46766fa8808e39fb71a433973a8b8a6723f774ae4f814fd02af01a"
+  },
+  {
+    "title": "syneidon/laravel:php81-node14-build1.1",
+    "tags": [
+      "php81-node14",
+      "php81-node14-build1.1",
+      "v10-php81-node14",
+      "v10-php81-node14-build1.1",
+      "v8-php81-node14",
+      "v8-php81-node14-build1.1",
+      "v9-php81-node14",
+      "v9-php81-node14-build1.1"
+    ],
+    "digest": "sha256:0a318b104484dabe9d60ec2d38b780858b8c80824b0df894b6ba1fc6900b07a5"
+  },
+  {
+    "title": "syneidon/laravel:php81-node16-build1.1",
+    "tags": [
+      "php81-node16",
+      "php81-node16-build1.1",
+      "v10-php81-node16",
+      "v10-php81-node16-build1.1",
+      "v11-php81-node16",
+      "v11-php81-node16-build1.1",
+      "v8-php81-node16",
+      "v8-php81-node16-build1.1",
+      "v9-php81-node16",
+      "v9-php81-node16-build1.1"
+    ],
+    "digest": "sha256:cfeb5e59179abb09ec7ae729f3a7b4af6a8f1a4dc3429a1f2284013f88a42970"
+  },
+  {
+    "title": "syneidon/laravel:php81-node18-build1.1",
+    "tags": [
+      "php81-node18",
+      "php81-node18-build1.1",
+      "v10-php81-node18",
+      "v10-php81-node18-build1.1",
+      "v11-php81-node18",
+      "v11-php81-node18-build1.1",
+      "v8-php81-node18",
+      "v8-php81-node18-build1.1",
+      "v9-php81-node18",
+      "v9-php81-node18-build1.1"
+    ],
+    "digest": "sha256:51e0bccd572740d3f4ec20151a64fb0127b256a9f4020249668fe7591a36c5e5"
+  },
+  {
+    "title": "syneidon/laravel:php81-node20-build1.1",
+    "tags": [
+      "php81-node20",
+      "php81-node20-build1.1",
+      "v10-php81-node20",
+      "v10-php81-node20-build1.1",
+      "v11-php81-node20",
+      "v11-php81-node20-build1.1",
+      "v8",
+      "v8-build1.1",
+      "v8-php81-node20",
+      "v8-php81-node20-build1.1",
+      "v9-php81-node20",
+      "v9-php81-node20-build1.1"
+    ],
+    "digest": "sha256:97da5012b2914ae3644645783c5d1f5e9404dcd0d079235d1e9844c3f2c6be56"
+  },
+  {
+    "title": "syneidon/laravel:php82-node14-build1.1",
+    "tags": [
+      "php82-node14",
+      "php82-node14-build1.1",
+      "v10-php82-node14",
+      "v10-php82-node14-build1.1",
+      "v9-php82-node14",
+      "v9-php82-node14-build1.1"
+    ],
+    "digest": "sha256:fbc3ca4a67ca4c8e6954c82c193a8aef2d943e8a96a9fd792935eb9309f57db1"
+  },
+  {
+    "title": "syneidon/laravel:php82-node16-build1.1",
+    "tags": [
+      "php82-node16",
+      "php82-node16-build1.1",
+      "v10-php82-node16",
+      "v10-php82-node16-build1.1",
+      "v11-php82-node16",
+      "v11-php82-node16-build1.1",
+      "v9-php82-node16",
+      "v9-php82-node16-build1.1"
+    ],
+    "digest": "sha256:e1dbe0f7db27ac989240fe218e8ec3597f09d07e57e20810482c260df8431967"
+  },
+  {
+    "title": "syneidon/laravel:php82-node18-build1.1",
+    "tags": [
+      "php82-node18",
+      "php82-node18-build1.1",
+      "v10-php82-node18",
+      "v10-php82-node18-build1.1",
+      "v11-php82-node18",
+      "v11-php82-node18-build1.1",
+      "v12-php82-node18",
+      "v12-php82-node18-build1.1",
+      "v9-php82-node18",
+      "v9-php82-node18-build1.1"
+    ],
+    "digest": "sha256:1d0d37bd9dcbe5bf178e6982afb3341b4f0cf44cc6ad11dd0eb633b08356fb33"
+  },
+  {
+    "title": "syneidon/laravel:php82-node20-build1.1",
+    "tags": [
+      "php82-node20",
+      "php82-node20-build1.1",
+      "v10",
+      "v10-build1.1",
+      "v10-php82-node20",
+      "v10-php82-node20-build1.1",
+      "v11-php82-node20",
+      "v11-php82-node20-build1.1",
+      "v12-php82-node20",
+      "v12-php82-node20-build1.1",
+      "v9",
+      "v9-build1.1",
+      "v9-php82-node20",
+      "v9-php82-node20-build1.1"
+    ],
+    "digest": "sha256:805e65867e118eb3fdaacc78d04a07f6926c1499c189535926ec604e57fed0ac"
+  },
+  {
+    "title": "syneidon/laravel:php83-node16-build1.1",
+    "tags": [
+      "php83-node16",
+      "php83-node16-build1.1",
+      "v11-php83-node16",
+      "v11-php83-node16-build1.1"
+    ],
+    "digest": "sha256:8fc7d78de362fda12bd2effc7c422b8786b422e0116ceae68f4ed5b3b612cd21"
+  },
+  {
+    "title": "syneidon/laravel:php83-node18-build1.1",
+    "tags": [
+      "php83-node18",
+      "php83-node18-build1.1",
+      "v11-php83-node18",
+      "v11-php83-node18-build1.1",
+      "v12-php83-node18",
+      "v12-php83-node18-build1.1"
+    ],
+    "digest": "sha256:d249e47c6dbe06696af6e3d047ef2b85840e737e03be0ccf9045600033763bb0"
+  },
+  {
+    "title": "syneidon/laravel:php83-node20-build1.1",
+    "tags": [
+      "php83-node20",
+      "php83-node20-build1.1",
+      "v11",
+      "v11-build1.1",
+      "v11-php83-node20",
+      "v11-php83-node20-build1.1",
+      "v12",
+      "v12-build1.1",
+      "v12-php83-node20",
+      "v12-php83-node20-build1.1"
+    ],
+    "digest": "sha256:06477daa122ba92b476c497171eb2fde79a0f06f08a99709003ff9a5284bef7a"
+  },
+  {
+    "title": "syneidon/laravel:php73-node14-build1.1",
+    "tags": [
+      "php73-node14",
+      "php73-node14-build1.1",
+      "v6-php73-node14",
+      "v6-php73-node14-build1.1",
+      "v7-php73-node14",
+      "v7-php73-node14-build1.1",
+      "v8-php73-node14",
+      "v8-php73-node14-build1.1"
+    ],
+    "digest": "sha256:b6e069e74c7b229407f11c2f4675dfa1afe0911643eb1c6defea7ed3aeb01dc6"
+  },
+  {
+    "title": "syneidon/laravel:php73-node16-build1.1",
+    "tags": [
+      "php73-node16",
+      "php73-node16-build1.1",
+      "v6-php73-node16",
+      "v6-php73-node16-build1.1",
+      "v7-php73-node16",
+      "v7-php73-node16-build1.1",
+      "v8-php73-node16",
+      "v8-php73-node16-build1.1"
+    ],
+    "digest": "sha256:781ce69990c25867e14f8dac88bb6143622edd22cd2f714a7c4b4be38f4332f0"
+  },
+  {
+    "title": "syneidon/laravel:php73-node18-build1.1",
+    "tags": [
+      "php73-node18",
+      "php73-node18-build1.1",
+      "v6-php73-node18",
+      "v6-php73-node18-build1.1",
+      "v7-php73-node18",
+      "v7-php73-node18-build1.1",
+      "v8-php73-node18",
+      "v8-php73-node18-build1.1"
+    ],
+    "digest": "sha256:96c63d9b8317fedce46ef27a17ce5412f698bca3407f04798efe67b22c43b4e1"
+  },
+  {
+    "title": "syneidon/laravel:php73-node20-build1.1",
+    "tags": [
+      "php73-node20",
+      "php73-node20-build1.1",
+      "v6-php73-node20",
+      "v6-php73-node20-build1.1",
+      "v7-php73-node20",
+      "v7-php73-node20-build1.1",
+      "v8-php73-node20",
+      "v8-php73-node20-build1.1"
+    ],
+    "digest": "sha256:57b0b47b918a3776fdfe323cfba7d8ebe59a436dfe6033c8b05a12d4fde824ec"
+  },
+  {
+    "title": "syneidon/laravel:php74-node14-build1.1",
+    "tags": [
+      "php74-node14",
+      "php74-node14-build1.1",
+      "v6-php74-node14",
+      "v6-php74-node14-build1.1",
+      "v7-php74-node14",
+      "v7-php74-node14-build1.1",
+      "v8-php74-node14",
+      "v8-php74-node14-build1.1"
+    ],
+    "digest": "sha256:e8ba35106b9aa35bdd549bc55bf622dbebfeecc32395fa95c6b408e23d941cb1"
+  },
+  {
+    "title": "syneidon/laravel:php74-node16-build1.1",
+    "tags": [
+      "php74-node16",
+      "php74-node16-build1.1",
+      "v6-php74-node16",
+      "v6-php74-node16-build1.1",
+      "v7-php74-node16",
+      "v7-php74-node16-build1.1",
+      "v8-php74-node16",
+      "v8-php74-node16-build1.1"
+    ],
+    "digest": "sha256:42f321771f9c53181634a8ddc3104728d6e061043c6aa8554a1eb254562dbb37"
+  },
+  {
+    "title": "syneidon/laravel:php74-node18-build1.1",
+    "tags": [
+      "php74-node18",
+      "php74-node18-build1.1",
+      "v6-php74-node18",
+      "v6-php74-node18-build1.1",
+      "v7-php74-node18",
+      "v7-php74-node18-build1.1",
+      "v8-php74-node18",
+      "v8-php74-node18-build1.1"
+    ],
+    "digest": "sha256:ecc26b047f559051922974bfbd2fb9217318a029c0ff53a1cf3a820bee777a8a"
+  },
+  {
+    "title": "syneidon/laravel:php74-node20-build1.1",
+    "tags": [
+      "php74-node20",
+      "php74-node20-build1.1",
+      "v6-php74-node20",
+      "v6-php74-node20-build1.1",
+      "v7-php74-node20",
+      "v7-php74-node20-build1.1",
+      "v8-php74-node20",
+      "v8-php74-node20-build1.1"
+    ],
+    "digest": "sha256:4a8854d2feae17e6ea9a4e7bb98304fcc54e10d4faaff67c68bb65f2db9810fe"
+  },
+  {
+    "title": "syneidon/laravel:php80-node14-build1.1",
+    "tags": [
+      "php80-node14",
+      "php80-node14-build1.1",
+      "v6-php80-node14",
+      "v6-php80-node14-build1.1",
+      "v7-php80-node14",
+      "v7-php80-node14-build1.1",
+      "v8-php80-node14",
+      "v8-php80-node14-build1.1",
+      "v9-php80-node14",
+      "v9-php80-node14-build1.1"
+    ],
+    "digest": "sha256:8514915dd0ef2c6f020048d3b15461836ff20c2d52671017577fde6316086257"
+  },
+  {
+    "title": "syneidon/laravel:php80-node16-build1.1",
+    "tags": [
+      "php80-node16",
+      "php80-node16-build1.1",
+      "v6-php80-node16",
+      "v6-php80-node16-build1.1",
+      "v7-php80-node16",
+      "v7-php80-node16-build1.1",
+      "v8-php80-node16",
+      "v8-php80-node16-build1.1",
+      "v9-php80-node16",
+      "v9-php80-node16-build1.1"
+    ],
+    "digest": "sha256:1060538e47269d6f12cdeb24d3d67d52550383f96782d8d29e51ac11f5d8f0cd"
+  },
+  {
+    "title": "syneidon/laravel:php80-node18-build1.1",
+    "tags": [
+      "php80-node18",
+      "php80-node18-build1.1",
+      "v6-php80-node18",
+      "v6-php80-node18-build1.1",
+      "v7-php80-node18",
+      "v7-php80-node18-build1.1",
+      "v8-php80-node18",
+      "v8-php80-node18-build1.1",
+      "v9-php80-node18",
+      "v9-php80-node18-build1.1"
+    ],
+    "digest": "sha256:6168ffeaa13075ea9bc8e48bd656c21537f5533ed1847ed1ccecaf00476d1d85"
+  },
+  {
+    "title": "syneidon/laravel:php80-node20-build1.1",
+    "tags": [
+      "php80-node20",
+      "php80-node20-build1.1",
+      "v6",
+      "v6-build1.1",
+      "v6-php80-node20",
+      "v6-php80-node20-build1.1",
+      "v7",
+      "v7-build1.1",
+      "v7-php80-node20",
+      "v7-php80-node20-build1.1",
+      "v8-php80-node20",
+      "v8-php80-node20-build1.1",
+      "v9-php80-node20",
+      "v9-php80-node20-build1.1"
+    ],
+    "digest": "sha256:264f9bcd43c8850416d0070a9aba04593276dfad13ef17f2dab5a4784e2494a0"
+  }
+]

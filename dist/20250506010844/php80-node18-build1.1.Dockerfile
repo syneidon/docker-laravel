@@ -1,8 +1,8 @@
-FROM {{BASE_IMAGE}}
+FROM syneidon/laravel:php80-nonode-build1.0
 
 USER appuser
 
-ENV NODE_MAJOR={{NODE_VERSION}}
+ENV NODE_MAJOR=18
 ENV NODE_DIR=/home/appuser/node
 ENV PATH="$NODE_DIR/bin:$PATH"
 
