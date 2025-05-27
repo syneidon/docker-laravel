@@ -1,9 +1,10 @@
-FROM php:{{PHP_VERSION}}-apache
+FROM php:7.3-apache
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer && \
-    composer self-update --stable
+    composer self-update --stable && \
+    composer self-update --update-keys
 
 # Set workdir
 WORKDIR /var/www/html

@@ -1,9 +1,7 @@
-FROM php:{{PHP_VERSION}}-apache
+FROM php:8.1-apache
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php && \
-    mv composer.phar /usr/local/bin/composer && \
-    composer self-update --stable
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Set workdir
 WORKDIR /var/www/html
@@ -14,7 +12,7 @@ RUN apt-get update && apt-get install -y \
   libonig-dev libxml2-dev zlib1g-dev libpng-dev libjpeg-dev \
   libfreetype6-dev libzip-dev libmemcached-dev libmemcached11 libmemcachedutil2 \
   libsodium-dev libssl-dev libicu-dev ca-certificates imagemagick libmagickwand-dev \
-  build-essential pkg-config p7zip-full \
+  build-essential pkg-config \
   && update-ca-certificates
 
 # Install PHP extensions
