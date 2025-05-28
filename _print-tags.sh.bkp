@@ -2,8 +2,6 @@
 
 set -e
 
-export DOCKER_BUILDKIT=1
-docker run --privileged --rm tonistiigi/binfmt --install all
 DRY_RUN=false
 
 # Parse flags
@@ -38,51 +36,15 @@ NODE_SUFFIX=$(jq -r '.node' "$RELEASES_FILE")
 
 # Prepare directories
 rm -rf "$DIST_DIR"
-mkdir -p "$DIST_DIR" "./logs" "./bake/$TIMESTAMP"
+mkdir -p "$DIST_DIR" "./logs"
 
 # Log setup
 JSON_FILE="./logs/build-${TIMESTAMP}.json"
 echo "[]" > "$JSON_FILE"
 
-write_group_log() { :; }
-
-generate_docker_bake_file() {
-  local bake_file="./bake/$TIMESTAMP/docker-bake.hcl"
-  echo 'group "default" {' > "$bake_file"
-  echo '  targets = [' >> "$bake_file"
-
-  jq -c '.[]' "$JSON_FILE" | while read -r entry; do
-    title=$(echo "$entry" | jq -r '.title' | sed 's/[^a-zA-Z0-9]/_/g')
-    echo "    \"$title\"," >> "$bake_file"
-  done
-
-  echo '  ]' >> "$bake_file"
-  echo '}' >> "$bake_file"
-  echo >> "$bake_file"
-
-  jq -c '.[]' "$JSON_FILE" | while read -r entry; do
-    title=$(echo "$entry" | jq -r '.title')
-    target_name=$(echo "$title" | sed 's/[^a-zA-Z0-9]/_/g')
-    dockerfile_tag=${title##*:}
-    dockerfile_path="$DIST_DIR/${dockerfile_tag}.Dockerfile"
-    tags=$(echo "$entry" | jq -r '.tags[]' | jq -R . | jq -s -c '.')
-
-    # Determina la versione PHP dal nome file/tag
-    php_version=$(echo "$dockerfile_tag" | grep -oP 'php\K[0-9]+' | head -n1)
-    # Imposta piattaforme sicure per tutte le versioni
-    platforms="[\"linux/amd64\",\"linux/arm64\",\"linux/arm/v7\",\"linux/386\",\"linux/ppc64le\",\"linux/s390x\",\"linux/mips64le\"]"
-
-    echo "target \"$target_name\" {" >> "$bake_file"
-    echo "  context = \".\"" >> "$bake_file"
-    echo "  dockerfile = \"$dockerfile_path\"" >> "$bake_file"
-    echo "  platforms = $platforms" >> "$bake_file"
-    echo "  tags = $tags" >> "$bake_file"
-    echo "  push = true" >> "$bake_file"
-    echo "}" >> "$bake_file"
-    echo >> "$bake_file"
-  done
-
-  echo "📜 Generated docker-bake.hcl with multi-arch targets at $bake_file."
+# Stub out logging to log file
+write_group_log() {
+  :
 }
 
 append_json_entry() {
@@ -132,9 +94,10 @@ for laravel_version in $laravel_versions; do
   laravel_version=$(echo "$laravel_version" | tr -d '\r')
   php_versions=$(jq -r --arg v "$laravel_version" '.[$v].php // [] | .[]' "$MATRIX_FILE")
   node_versions=$(jq -r --arg v "$laravel_version" '.[$v].node // [] | .[]' "$MATRIX_FILE")
+  # Aggiunta delle variabili per la combinazione primaria
   last_php=$(jq -r --arg v "$laravel_version" '.[$v].php | last' "$MATRIX_FILE")
   last_node=$(jq -r --arg v "$laravel_version" '.[$v].node | last' "$MATRIX_FILE")
-
+  
   for php_version in $php_versions; do
     safe_php=$(echo "$php_version" | sed 's/\.//g')
     for node_version in $node_versions; do
@@ -148,13 +111,20 @@ for laravel_version in $laravel_versions; do
           -e "s|{{BASE_IMAGE}}|$REPO:$base_tag|g" "$NODE_TEMPLATE_FILE" > "$outfile"
 
       stable_tags=("$combo_tag" "v${laravel_version#v}-$combo_tag")
+      # Modifica della condizione: aggiunge tag vX solo per la combinazione primaria
       if [[ "$php_version" == "$last_php" && "$node_version" == "$last_node" ]]; then
         stable_tags+=("v${laravel_version#v}")
       fi
 
       all_tags=()
       for tag in "${stable_tags[@]}"; do
-        all_tags+=("$tag" "${tag}-${NODE_SUFFIX}")
+        all_tags+=("$tag")
+        all_tags+=("${tag}-${NODE_SUFFIX}")
+      done
+
+      build_args=()
+      for tag in "${all_tags[@]}"; do
+        build_args+=("-t" "$REPO:$tag")
       done
 
       digest="sha256:<dry-run>"
@@ -164,26 +134,60 @@ for laravel_version in $laravel_versions; do
 done
 
 echo -e "\n✅ Release complete."
-echo "📜 JSON blueprint written to: $JSON_FILE"
+echo "📝 JSON blueprint written to: $JSON_FILE"
 
 if [ "$DRY_RUN" = false ]; then
   echo "🛑 Dry run mode disabled. Images are going to be built and pushed..."
 
-  # Create buildx builder if needed
-  if ! docker buildx inspect multiarch-builder &>/dev/null; then
-    echo "🔧 Creating multiarch buildx builder..."
-    docker buildx create --name multiarch-builder --driver docker-container --use
-  else
-    docker buildx use multiarch-builder
-  fi
-  docker buildx inspect --bootstrap
+  tmp_json="${JSON_FILE}.tmp"
+  echo "[]" > "$tmp_json"
 
-  generate_docker_bake_file
-  docker buildx bake --file "./bake/$TIMESTAMP/docker-bake.hcl"
+  jq -c '.[]' "$JSON_FILE" | while read -r entry; do
+    title=$(echo "$entry" | jq -r '.title')
+    dockerfile_tag=${title##*:}
+    dockerfile_path="$DIST_DIR/${dockerfile_tag}.Dockerfile"
+    tags=$(echo "$entry" | jq -r '.tags[]' | grep -v '^\s*$') # remove empty lines
 
-  echo "✅ Docker images built, pushed, and digests handled via buildx bake."
-else
-  echo "🚫 Dry run mode enabled. No images will be built or pushed."
-  generate_docker_bake_file
-  echo "✅ Bake file generated."
+    # Skip invalid dockerfile path
+    if [[ ! -f "$dockerfile_path" ]]; then
+      echo "⚠️ Dockerfile not found: $dockerfile_path. Skipping $title"
+      continue
+    fi
+
+    # Build image with first valid tag
+    first_tag=$(echo "$tags" | head -n1)
+    echo "🚧 Building $REPO:$first_tag from $dockerfile_path..."
+    docker build -f "$dockerfile_path" -t "$REPO:$first_tag" .
+
+    # Apply all other tags
+    echo "$tags" | tail -n +2 | while read -r tag; do
+      [[ -n "$tag" ]] && docker tag "$REPO:$first_tag" "$REPO:$tag"
+    done
+
+    # Push all tags
+    digest=""
+    for tag in $tags; do
+      if [[ "$tag" =~ ^[a-zA-Z0-9._-]+$ ]]; then
+        echo "📤 Pushing $REPO:$tag..."
+        docker push "$REPO:$tag" | tee /tmp/push-output.log
+        if [[ -z "$digest" ]]; then
+          digest=$(grep -o 'sha256:[a-f0-9]\{64\}' /tmp/push-output.log | head -n1)
+          if [[ -z "$digest" ]]; then
+            echo "❌ Failed to extract digest for $REPO:$tag"
+            digest="sha256:unknown"
+          fi
+        fi
+      else
+        echo "❌ Invalid tag format: '$tag' — skipping"
+      fi
+    done
+
+    # Rebuild JSON entry
+    json_tags=$(echo "$tags" | jq -R . | jq -s .)
+    jq --arg title "$title" --arg digest "$digest" --argjson tags "$json_tags" \
+      '. + [{"title": $title, "tags": $tags, "digest": $digest}]' "$tmp_json" > "$tmp_json.new" && mv "$tmp_json.new" "$tmp_json"
+  done
+
+  mv "$tmp_json" "$JSON_FILE"
+  echo "✅ Docker images built, pushed, and digests recorded in: $JSON_FILE"
 fi
