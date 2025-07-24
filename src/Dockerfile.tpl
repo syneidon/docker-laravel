@@ -17,6 +17,11 @@ RUN apt-get update && apt-get install -y \
   build-essential pkg-config p7zip-full \
   && update-ca-certificates
 
+# 2025-07-24 added gd extension for image processing
+RUN apt-get update && apt-get install -y libjpeg-dev libpng-dev libfreetype6-dev \
+  && docker-php-ext-configure gd --with-jpeg --with-freetype \
+  && docker-php-ext-install gd
+
 # Install PHP extensions
 RUN docker-php-ext-install -j$(nproc) iconv \
   && docker-php-ext-install -j$(nproc) gd \
